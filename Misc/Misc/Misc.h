@@ -333,7 +333,74 @@ namespace Misc {
 
 	namespace Math {
 		public ref class XMath{
-			// TODO: Add your methods for this class here.
+		public :
+			int bitwise_mul_2(int value) {
+				return value << 1;
+			}
+
+			int bitwise_div_2(int value) {
+				return value >> 1;
+			}
+
+			int bitwise_add(int x, int y){
+				int carry;
+				while (y != 0){
+					carry = x & y;
+					x = x ^ y;
+					y = carry << 1;
+				}
+				return x;
+			}
+
+			int bitwise_sub(int x, int y) {
+				return bitwise_add(x, bitwise_negate(y));
+			}
+
+			int bitwise_mul(int x, int y) {
+				int m = 1, z = 0;
+				if (x<0) {
+					x = bitwise_negate(x);
+					y = bitwise_negate(y);	
+				}
+				while (x >= m && y) {
+					if (x &m) z = bitwise_add(y, z);
+					y <<= 1; m <<= 1;	
+				}
+				return z;
+			}
+
+			int bitwise_div(int x, int y) {
+				int c = 0, sign = 0;
+
+				if (x<0) {
+					x = bitwise_negate(x);
+					sign ^= 1;
+				}
+
+				if (y<0) {
+					y = bitwise_negate(y);
+					sign ^= 1;
+				}
+
+				if (y != 0) {
+					while (x >= y) {
+						x = bitwise_sub(x, y);
+						++c;
+					}
+				}
+				if (sign) {
+					c = bitwise_negate(c);
+				}
+				return c;
+			}
+
+			XMath(){}
+			~XMath(){}
+			!XMath(){}
+		private:
+			int bitwise_negate(int x) {
+				return bitwise_add(~x, 1);
+			}
 		};
 	}
 }
